@@ -1,23 +1,39 @@
+import { useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import axios from 'axios';
 
 function App() {
+  
+  const [responseData, setResponseData] = useState(null);
+
+  const login = () => {
+    return
+  }
+
+  const loadFromServer = () => {
+    axios({
+      method: "GET",
+      url:"/login",
+    }).then((response) => {
+      setResponseData({
+        datum: response.data
+      })
+    }).catch((error) => {
+      if (error.response) {
+        console.log(error.response)
+        console.log(error.response.status)
+        console.log(error.response.headers)
+      }
+    })
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <button onClick={loadFromServer}>HI</button>
+      {
+        responseData && <div>{responseData.datum}</div>
+      }
     </div>
   );
 }
