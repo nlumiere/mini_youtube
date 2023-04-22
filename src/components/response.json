@@ -1,0 +1,44 @@
+{
+  "data": {
+    "kind": "youtube#channel",
+    "etag": "y9CXi6drK3UJjwyna8UAyW1XVBw",
+    "id": "UCBfKnGKS1fhz6XStWJcKGTw",
+    "snippet": {
+      "title": "Nicholas Lumiere",
+      "description": "",
+      "customUrl": "@nicholaslumiere2030",
+      "publishedAt": "2013-07-08T19:41:36Z",
+      "thumbnails": {
+        "default": {
+          "url": "https://yt3.ggpht.com/ytc/AL5GRJVLmA5WguWD3-WfP1KMSphFVSzhGtpoPIG5gKCv=s88-c-k-c0x00ffffff-no-rj",
+          "width": 88,
+          "height": 88
+        },
+        "medium": {
+          "url": "https://yt3.ggpht.com/ytc/AL5GRJVLmA5WguWD3-WfP1KMSphFVSzhGtpoPIG5gKCv=s240-c-k-c0x00ffffff-no-rj",
+          "width": 240,
+          "height": 240
+        },
+        "high": {
+          "url": "https://yt3.ggpht.com/ytc/AL5GRJVLmA5WguWD3-WfP1KMSphFVSzhGtpoPIG5gKCv=s800-c-k-c0x00ffffff-no-rj",
+          "width": 800,
+          "height": 800
+        }
+      },
+      "localized": { "title": "Nicholas Lumiere", "description": "" },
+      "country": "US"
+    },
+    "contentDetails": {
+      "relatedPlaylists": {
+        "likes": "LL",
+        "uploads": "UUBfKnGKS1fhz6XStWJcKGTw"
+      }
+    },
+    "statistics": {
+      "viewCount": "0",
+      "subscriberCount": "0",
+      "hiddenSubscriberCount": false,
+      "videoCount": "0"
+    }
+  }
+}

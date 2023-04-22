@@ -1,39 +1,49 @@
-import { useState } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import LoginButton from "./components/LoginButton";
+import YouTubeData from "./components/YoutubeData";
 
 function App() {
-  
-  const [responseData, setResponseData] = useState(null);
+  const [authUrl, setAuthUrl] = useState(null);
+  const [accessToken, setAccessToken] = useState(null);
 
-  const login = () => {
-    return
-  }
+  useEffect(() => {
+    const fetchAuthUrl = async () => {
+      const response = await fetch("http://localhost:3000/");
+      const data = await response.json();
+      setAuthUrl(data.auth_url);
+    };
 
-  const loadFromServer = () => {
-    axios({
-      method: "GET",
-      url:"/login",
-    }).then((response) => {
-      setResponseData({
-        datum: response.data
-      })
-    }).catch((error) => {
-      if (error.response) {
-        console.log(error.response)
-        console.log(error.response.status)
-        console.log(error.response.headers)
+    fetchAuthUrl();
+  }, []);
+
+  useEffect(() => {
+    const fetchAccessToken = async () => {
+      if (window.location.search) {
+        const responseToken = new URLSearchParams(window.location.search).get(
+          "accessToken"
+        );
+        if (responseToken) {
+          setAccessToken(responseToken);
+        }
       }
-    })
-  }
+    };
+
+    fetchAccessToken();
+  }, []);
 
   return (
     <div className="App">
-      <button onClick={loadFromServer}>HI</button>
-      {
-        responseData && <div>{responseData.datum}</div>
-      }
+      <header className="App-header">
+        {accessToken ? (
+          <div>
+            <h2>{accessToken}</h2>
+            <YouTubeData accessToken={accessToken} />
+          </div>
+        ) : (
+          authUrl && <LoginButton authUrl={authUrl} />
+        )}
+      </header>
     </div>
   );
 }
