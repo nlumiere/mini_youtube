@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Box, Container } from "@mui/material";
 import Profile from "./Profile";
+import Videos from "./Videos";
 
 const YouTubeData = () => {
   const [youtubeData, setYoutubeData] = useState(null);
@@ -22,8 +23,8 @@ const YouTubeData = () => {
       });
   };
 
-  const ping = async () => {
-    const resp = await fetch("http://localhost:3000/ping", {
+  const debug = async () => {
+    const resp = await fetch("http://localhost:3000/debug", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -35,15 +36,15 @@ const YouTubeData = () => {
 
   return (
     <div>
-      {!youtubeData && (
+      {!youtubeData ? (
         <Container>
           <Box>
             <Profile />
             <Button onClick={getVideos}>GET VEEDO</Button>
-            <Button onClick={ping}>PING</Button>
+            <Button onClick={debug}>DEBUG</Button>
           </Box>
         </Container>
-      )}
+      ) : <Videos bfo={youtubeData} />}
     </div>
   );
 };

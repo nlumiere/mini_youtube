@@ -3,6 +3,7 @@ import "./App.css";
 import LoginButton from "./components/LoginButton";
 import YouTubeData from "./components/YoutubeData";
 import { Button } from "@mui/material";
+import { useCookies } from 'react-cookie';
 
 function App() {
   const [authUrl, setAuthUrl] = useState(null);
@@ -13,22 +14,35 @@ function App() {
       const response = await fetch("http://localhost:3000/auth");
       const data = await response.json();
       if (data) {
+        setAuthUrl(data.auth_url);
+      }
+    };
+    fetchAuthUrl();
+
+    const ping = async () => {
+      const resp = await fetch("http://localhost:3000/ping", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (resp.status === 200) {
         setAuthenticated(true);
       }
-      setAuthUrl(data.auth_url);
     };
-
-    fetchAuthUrl();
+    ping();
   }, []);
 
   const logout = async () => {
     console.log("HERE");
-    await fetch("http://localhost:3000/logout", {
+    const resp = await fetch("http://localhost:3000/logout", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
     });
+
     setAuthenticated(false);
   };
 
@@ -43,6 +57,7 @@ function App() {
         ) : (
           authUrl && <LoginButton authUrl={authUrl} />
         )}
+        {!authenticated ? <h1>HI</h1> : <></>}
       </header>
     </div>
   );
