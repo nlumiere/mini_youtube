@@ -5,7 +5,6 @@ import Thumbnail from "./Thumbnail";
 
 export default function Videos(props=null) {
   const [videosObject, setVideosObject] = useState(props.bfo);
-  // console.log(videosObject)
 
   const rankVideos = () => {
     return;
@@ -13,15 +12,13 @@ export default function Videos(props=null) {
 
   return (
     <Container>
-      { videosObject && videosObject[0][0] && (
-        <Grid>
-          {videosObject.map(function(item) {
+      { videosObject && videosObject[0] && (
+        <Grid container spacing={2}>
+          {videosObject.map(function(video) {
             return (
-              item.map(function(video) {
-                return (
-                  <Thumbnail video={video} />
-                )
-              })
+              <Grid item xs={4}>
+                <Thumbnail video={video} />
+              </Grid>
             )
           })}
         </Grid>
