@@ -12,14 +12,16 @@ export default function Videos(props=null) {
 
   return (
     <Container>
-      { videosObject && videosObject[0] && (
+      { videosObject && (
         <Grid container spacing={2}>
           {videosObject.map(function(video) {
-            return (
-              <Grid item xs={4}>
-                <Thumbnail video={video} />
-              </Grid>
-            )
+            if (video !== null) {
+              return (
+                <Grid item xs={4}>
+                  <Thumbnail video={video[Object.keys(video)[1]]} />
+                </Grid>
+              )
+            }
           })}
         </Grid>
       )}

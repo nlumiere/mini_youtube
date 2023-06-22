@@ -34,6 +34,18 @@ function App() {
     ping();
   }, []);
 
+  useEffect(() => {
+    if (authenticated) {
+      fetch("http://localhost:3000/firstpass", {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+  }, [authenticated]);
+
   const logout = async () => {
     console.log("HERE");
     const resp = await fetch("http://localhost:3000/logout", {

@@ -3,8 +3,6 @@ import { Container, Box, Typography, duration, Link } from "@mui/material";
 
 export default function Thumbnail(props=null) {
 	const [video] = useState(props.video);
-	const id = video["id"];
-	const snippet = video["snippet"];
 
 	const getDuration = (durationString) => {
 		const hoursMatch = durationString.match(/(\d+)H/);
@@ -22,7 +20,7 @@ export default function Thumbnail(props=null) {
 		return hours ? hours + ":" + minutes + ":" + seconds : hourlessMinutes + ":" + seconds;
 	}
 
-	const duration = getDuration(video["contentDetails"]["duration"]);
+	const duration = getDuration(video["videoLength"]);
 
 	return (
 	<Container>
@@ -30,9 +28,9 @@ export default function Thumbnail(props=null) {
 			// until I can keep it in-app
 			<Link href={"https://www.youtube.com/watch?v=" + video["id"]}>
 				<Box>  
-					<img src={video["snippet"]["thumbnails"]["default"]["url"]} />
-					<Typography>{video["snippet"]["channelTitle"]}</Typography>
-					<Typography>{video["snippet"]["title"]}</Typography>
+					<img src={video["thumbnail"]} />
+					<Typography>{video["channelTitle"]}</Typography>
+					<Typography>{video["videoTitle"]}</Typography>
 					<Typography>{duration}</Typography>
 				</Box>
 			</Link>
