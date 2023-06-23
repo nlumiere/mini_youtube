@@ -18,7 +18,7 @@ export default function Videos(props=null) {
             if (video !== null) {
               return (
                 <Grid item xs={4}>
-                  <Thumbnail video={video[Object.keys(video)[1]]} />
+                  <Thumbnail id={Object.keys(video)[1]} video={video[Object.keys(video)[1]]} />
                 </Grid>
               )
             }

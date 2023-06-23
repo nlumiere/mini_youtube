@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Container, Box, Typography, duration, Link } from "@mui/material";
 
 export default function Thumbnail(props=null) {
+	const [id] = useState(props.id);
 	const [video] = useState(props.video);
 
 	const getDuration = (durationString) => {
@@ -22,11 +23,33 @@ export default function Thumbnail(props=null) {
 
 	const duration = getDuration(video["videoLength"]);
 
+	const handleClick = async (event) => {
+		event.preventDefault();
+		event.persist();
+
+		const { href } = event.currentTarget;
+
+		try {
+			await fetch("http://localhost:3000/video_clicked", {
+				method: "POST",
+				credentials: "include",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({id: id, clickedVideo: video}),
+			});
+		} catch {
+			console.log(":)");
+		}
+
+		window.location.href = href;
+	}
+
 	return (
 	<Container>
 		{video ? (
 			// until I can keep it in-app
-			<Link href={"https://www.youtube.com/watch?v=" + video["id"]}>
+			<Link onClick={handleClick} href={"https://www.youtube.com/watch?v=" + id}>
 				<Box>  
 					<img src={video["thumbnail"]} />
 					<Typography>{video["channelTitle"]}</Typography>

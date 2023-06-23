@@ -32,6 +32,8 @@ const YouTubeData = () => {
     }).then((res) => {
       if (res.status === 269) {
         retrieveData();
+      } else if (res.status === 200) {
+        alert("Update filters before retrieving videos.");
       }
     })
   };
