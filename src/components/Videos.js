@@ -3,12 +3,9 @@ import { Container, Box, Typography, Grid } from "@mui/material";
 import "./Thumbnail";
 import Thumbnail from "./Thumbnail";
 
-export default function Videos(props=null) {
+export default function Videos(props) {
   const [videosObject, setVideosObject] = useState(props.bfo);
-
-  const rankVideos = () => {
-    return;
-  }
+  console.log(videosObject)
 
   return (
     <Container>

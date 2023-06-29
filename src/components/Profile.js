@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import UserSettings from "./UserSettings";
-import { Container } from "@mui/material";
+import { Button, Container } from "@mui/material";
 export default function Profile() {
   const empty = {};
   const [settings, setSettings] = useState(empty);
@@ -25,9 +25,20 @@ export default function Profile() {
     setProfile();
   }
 
+  const deleteData = async () => {
+    await fetch("http://localhost:3000/delete_data", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+  }
+
   return (
     <Container>
       <UserSettings settings={settings}/>
+      <Button onClick={deleteData}>Delete Data</Button>
     </Container>
   )
 }

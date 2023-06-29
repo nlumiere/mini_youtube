@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container, Box, TextField, Button, FormControl, InputLabel, Input, FormHelperText, FormControlLabel, FormGroup, Checkbox } from "@mui/material";
+import { Box, Button, FormControl, InputLabel, Input, FormHelperText, FormControlLabel, FormGroup, Checkbox } from "@mui/material";
 import { checkboxTruthyMapping } from "../utils";
 
 export default function UserSettings(props) {

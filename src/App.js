@@ -1,38 +1,59 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import LoginButton from "./components/LoginButton";
 import YouTubeData from "./components/YoutubeData";
-import { Button } from "@mui/material";
-import { useCookies } from 'react-cookie';
+import Navbar from "./components/Navbar";
+import LoginButton from "./components/LoginButton";
+import { Box, Button } from "@mui/material";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes
+} from 'react-router-dom';
+import Profile from "./components/Profile";
+import Videos from "./components/Videos";
 
-function App() {
+
+export default function App() {
   const [authUrl, setAuthUrl] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
 
-  useEffect(() => {
-    const fetchAuthUrl = async () => {
-      const response = await fetch("http://localhost:3000/auth");
-      const data = await response.json();
-      if (data) {
-        setAuthUrl(data.auth_url);
-      }
-    };
-    fetchAuthUrl();
+  const fetchAuthUrl = async () => {
+		const response = await fetch("http://localhost:3000/auth");
+		const data = await response.json();
+		if (data) {
+			setAuthUrl(data.auth_url);
+		}
+	};
 
-    const ping = async () => {
-      const resp = await fetch("http://localhost:3000/ping", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (resp.status === 200) {
-        setAuthenticated(true);
-      }
-    };
-    ping();
-  }, []);
+  const ping = async () => {
+		const resp = await fetch("http://localhost:3000/ping", {
+			method: "POST",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		if (resp.status === 200) {
+			setAuthenticated(true);
+		}
+	};
+
+	const logout = async () => {
+    console.log("HERE");
+    const resp = await fetch("http://localhost:3000/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    setAuthenticated(false);
+  };
+
+	useEffect(() => {
+		fetchAuthUrl();
+		ping();
+	}, []);
 
   useEffect(() => {
     if (authenticated) {
@@ -46,33 +67,64 @@ function App() {
     }
   }, [authenticated]);
 
-  const logout = async () => {
-    console.log("HERE");
-    const resp = await fetch("http://localhost:3000/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    setAuthenticated(false);
-  };
-
   return (
-    <div className="App">
-      <header className="App-header">
-        {authenticated ? (
-          <div>
-            <YouTubeData />
-            <Button onClick={logout}>Log Out</Button>
-          </div>
-        ) : (
-          authUrl && <LoginButton authUrl={authUrl} />
-        )}
-        {!authenticated ? <h1>HI</h1> : <></>}
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <Navbar>
+            <nav>
+              { !authenticated ?
+                <LoginButton authUrl={authUrl} color="inherit"/>
+                : <Button onClick={logout} color="inherit">Logout</Button>
+              }
+            </nav>
+          </Navbar>
+          <Routes>
+            <Route path="/" element={authenticated && <YouTubeData />} />
+            <Route path="/profile" element={authenticated && <Profile />} />
+            <Route path="/search" element={authenticated && <SearchResults />} />
+            <Route path="/watch" element={<Watch />} />
+          </Routes>
+        </header>
+      </div>
+    </Router>
   );
 }
 
-export default App;
+export function SearchResults() {
+  const [searchResults, setSearchResults] = useState(null);
+
+  const getSearchResults = async () => {
+    // const params = new URLSearchParams(window.location.search);
+    // const query = params.get("q");
+    await fetch("http://localhost:3000/retrieveVideos", {
+			method: "POST",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		}).then((res) => {
+      return res.json();
+    }).then((data) => {
+      console.log(data);
+      setSearchResults(data);
+    });
+  }
+
+  useEffect(() => {
+    getSearchResults();
+  }, []);
+
+  return (
+    <Box sx={{marginTop: "100px"}}>
+      {searchResults && <Videos bfo={searchResults} />}
+    </Box>
+  )
+}
+
+export function Watch() {
+  
+  return (
+    <iframe src={"https://www.youtube.com/embed/" + (new URLSearchParams(window.location.search)).get("id") + "?autoplay=1"} allow="autoplay" allowFullScreen></iframe>
+  )
+}

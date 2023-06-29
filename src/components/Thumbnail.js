@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { Container, Box, Typography, duration, Link } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export default function Thumbnail(props=null) {
 	const [id] = useState(props.id);
 	const [video] = useState(props.video);
+	const navigate = useNavigate();
 
 	const getDuration = (durationString) => {
 		const hoursMatch = durationString.match(/(\d+)H/);
@@ -27,8 +29,6 @@ export default function Thumbnail(props=null) {
 		event.preventDefault();
 		event.persist();
 
-		const { href } = event.currentTarget;
-
 		try {
 			await fetch("http://localhost:3000/video_clicked", {
 				method: "POST",
@@ -42,14 +42,14 @@ export default function Thumbnail(props=null) {
 			console.log(":)");
 		}
 
-		window.location.href = href;
+		navigate(`/watch?id=${id}`);
 	}
 
 	return (
 	<Container>
 		{video ? (
 			// until I can keep it in-app
-			<Link onClick={handleClick} href={"https://www.youtube.com/watch?v=" + id}>
+			<Link onClick={handleClick} href={"/watch?id=" + id}>
 				<Box>  
 					<img src={video["thumbnail"]} />
 					<Typography>{video["channelTitle"]}</Typography>
