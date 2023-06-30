@@ -71,7 +71,7 @@ export default function App() {
     <Router>
       <div className="App">
         <header className="App-header">
-          <Navbar>
+          <Navbar authenticated={authenticated}>
             <nav>
               { !authenticated ?
                 <LoginButton authUrl={authUrl} color="inherit"/>
@@ -93,10 +93,12 @@ export default function App() {
 
 export function SearchResults() {
   const [searchResults, setSearchResults] = useState(null);
+  const [numItems, setNumItems] = useState(0);
 
   const getSearchResults = async () => {
-    // const params = new URLSearchParams(window.location.search);
-    // const query = params.get("q");
+    const params = new URLSearchParams(window.location.search);
+    const items = parseInt(params.get("items"));
+    setNumItems(items);
     await fetch("http://localhost:3000/retrieveVideos", {
 			method: "POST",
 			credentials: "include",
@@ -117,7 +119,7 @@ export function SearchResults() {
 
   return (
     <Box sx={{marginTop: "100px"}}>
-      {searchResults && <Videos bfo={searchResults} />}
+      {searchResults && <Videos bfo={searchResults} search={numItems} />}
     </Box>
   )
 }

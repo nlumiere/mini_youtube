@@ -62,7 +62,7 @@ const YouTubeData = () => {
             <Button onClick={debug}>DEBUG</Button>
           </Box>
         </Container>
-      ) : <Box sx={{marginTop: "100px"}}><Videos bfo={youtubeData} /></Box>}
+      ) : <Box sx={{marginTop: "100px"}}><Videos bfo={youtubeData} search={false} /></Box>}
     </div>
   );
 };

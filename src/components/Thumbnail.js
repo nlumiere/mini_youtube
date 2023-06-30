@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 export default function Thumbnail(props=null) {
 	const [id] = useState(props.id);
 	const [video] = useState(props.video);
+	const [search] = useState(props.search);
 	const navigate = useNavigate();
 
 	const getDuration = (durationString) => {
@@ -36,7 +37,7 @@ export default function Thumbnail(props=null) {
 				headers: {
 					"Content-Type": "application/json",
 				},
-				body: JSON.stringify({id: id, clickedVideo: video}),
+				body: JSON.stringify({id: id, clickedVideo: video, search: search}),
 			});
 		} catch {
 			console.log(":)");
