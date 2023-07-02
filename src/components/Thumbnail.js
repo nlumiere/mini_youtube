@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { Container, Box, Typography, duration, Link } from "@mui/material";
+import { Container, Box, Typography, Link } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import "../Thumbnail.css";
+import { getDomain } from "../utils";
 
 export default function Thumbnail(props=null) {
 	const [id] = useState(props.id);
@@ -31,7 +33,7 @@ export default function Thumbnail(props=null) {
 		event.persist();
 
 		try {
-			await fetch("http://localhost:3000/video_clicked", {
+			await fetch(`${getDomain()}:3000/video_clicked`, {
 				method: "POST",
 				credentials: "include",
 				headers: {
@@ -49,13 +51,12 @@ export default function Thumbnail(props=null) {
 	return (
 	<Container>
 		{video ? (
-			// until I can keep it in-app
 			<Link onClick={handleClick} href={"/watch?id=" + id}>
 				<Box>  
 					<img src={video["thumbnail"]} />
-					<Typography>{video["channelTitle"]}</Typography>
-					<Typography>{video["videoTitle"]}</Typography>
-					<Typography>{duration}</Typography>
+					<Typography className="thumbnail-duration">{duration}</Typography>
+					<Typography className="thumbnail-text">{video["channelTitle"]}</Typography>
+					<Typography className="thumbnail-text thumbnail-title">{video["videoTitle"]}</Typography>
 				</Box>
 			</Link>
 		) :  <Box></Box>}

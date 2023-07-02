@@ -5,6 +5,7 @@ import Toolbar from '@mui/material/Toolbar';
 import SearchIcon from '@mui/icons-material/Search';
 import { Button, FormControl, Input, InputLabel } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
+import { getDomain } from '../utils';
 import "../Navbar.css";
 
 export default function Navbar(props) {
@@ -19,7 +20,7 @@ export default function Navbar(props) {
 		event.preventDefault();
 		event.persist();
 		const query = searchValue;
-		const response = await fetch("http://localhost:3000/logSearchResults", {
+		await fetch(`${getDomain()}:3000/logSearchResults`, {
 			method: "POST",
 			credentials: "include",
 			body: JSON.stringify({query: query}),
@@ -30,6 +31,8 @@ export default function Navbar(props) {
 			return response.json();
 		}).then(data => {
 			navigate(`/search?q=${encodeURI(query)}?items=${data["numItems"]}`)
+		}).catch(() => {
+			navigate("/verify");
 		});
 	}
 

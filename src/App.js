@@ -3,22 +3,23 @@ import "./App.css";
 import YouTubeData from "./components/YoutubeData";
 import Navbar from "./components/Navbar";
 import LoginButton from "./components/LoginButton";
-import { Box, Button } from "@mui/material";
+import { Box, Button, FormControl, FormHelperText, Input, InputLabel } from "@mui/material";
 import {
   BrowserRouter as Router,
   Route,
-  Routes
+  Routes,
+  useNavigate
 } from 'react-router-dom';
 import Profile from "./components/Profile";
 import Videos from "./components/Videos";
-
+import { getDomain } from "./utils";
 
 export default function App() {
   const [authUrl, setAuthUrl] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
 
   const fetchAuthUrl = async () => {
-		const response = await fetch("http://localhost:3000/auth");
+		const response = await fetch(`${getDomain()}:3000/auth`);
 		const data = await response.json();
 		if (data) {
 			setAuthUrl(data.auth_url);
@@ -26,7 +27,7 @@ export default function App() {
 	};
 
   const ping = async () => {
-		const resp = await fetch("http://localhost:3000/ping", {
+		const resp = await fetch(`${getDomain()}:3000/ping`, {
 			method: "POST",
 			credentials: "include",
 			headers: {
@@ -40,7 +41,7 @@ export default function App() {
 
 	const logout = async () => {
     console.log("HERE");
-    const resp = await fetch("http://localhost:3000/logout", {
+    await fetch(`${getDomain()}:3000/logout`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -57,7 +58,7 @@ export default function App() {
 
   useEffect(() => {
     if (authenticated) {
-      fetch("http://localhost:3000/firstpass", {
+      fetch(`${getDomain()}:3000/firstpass`, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -84,6 +85,7 @@ export default function App() {
             <Route path="/profile" element={authenticated && <Profile />} />
             <Route path="/search" element={authenticated && <SearchResults />} />
             <Route path="/watch" element={<Watch />} />
+            <Route path="/verify" element={<Verify />} />
           </Routes>
         </header>
       </div>
@@ -94,12 +96,13 @@ export default function App() {
 export function SearchResults() {
   const [searchResults, setSearchResults] = useState(null);
   const [numItems, setNumItems] = useState(0);
+  const navigate = useNavigate();
 
   const getSearchResults = async () => {
     const params = new URLSearchParams(window.location.search);
     const items = parseInt(params.get("items"));
     setNumItems(items);
-    await fetch("http://localhost:3000/retrieveVideos", {
+    await fetch(`${getDomain()}:3000/retrieveVideos`, {
 			method: "POST",
 			credentials: "include",
 			headers: {
@@ -108,8 +111,9 @@ export function SearchResults() {
 		}).then((res) => {
       return res.json();
     }).then((data) => {
-      console.log(data);
       setSearchResults(data);
+    }).catch(() => {
+      navigate("/verify");
     });
   }
 
@@ -125,8 +129,65 @@ export function SearchResults() {
 }
 
 export function Watch() {
-  
   return (
     <iframe src={"https://www.youtube.com/embed/" + (new URLSearchParams(window.location.search)).get("id") + "?autoplay=1"} allow="autoplay" allowFullScreen></iframe>
+  )
+}
+
+export function Verify() {
+  const [inputState, setInputState] = useState(null);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    await fetch(`${getDomain()}:3000/verify-user`, {
+			method: "POST",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json",
+			},
+      body: JSON.stringify({passphrase: inputState})
+		}).then(res => {
+      if (res.status === 200) {
+        navigate("/");
+      }
+    }).catch(() => {
+      console.log("No :)");
+    });
+  }
+
+  const handleChange = (event) => {
+    setInputState(event.target.value);
+  }
+
+  const getIsVerified = async () => {
+    await fetch(`${getDomain()}:3000/check-verified`, {
+			method: "POST",
+			credentials: "include",
+			headers: {
+				"Content-Type": "application/json",
+			}
+		}).then(res => {
+      if (res.status === 200) {
+        navigate("/");
+      }
+    });
+  }
+
+  useEffect(() => {
+    getIsVerified();
+  }, []);
+
+  return (
+    <form onSubmit={handleSubmit} onChange={handleChange}>
+      <FormControl>
+        <InputLabel sx={{color:"white"}} htmlFor="vidlength" className="whitetext">Account Key</InputLabel>
+        <Input sx={{color:"white"}} type="text" name="passphrase" id="passphrase" aria-describedby="my-helper-text" className="whitetext"/>
+        <FormHelperText sx={{color:"white"}} id="my-helper-text" className="whitetext">This app is in closed alpha. Please input the unique key to grant access.</FormHelperText>
+      </FormControl>
+      <Button
+        type="submit"
+      >Submit</Button>
+    </form>
   )
 }

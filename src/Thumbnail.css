@@ -1,0 +1,16 @@
+.thumbnail-text {
+	text-decoration: none;
+	color:white;
+}
+
+.thumbnail-duration {
+	position:relative;
+	margin-top:-30px;
+	color:white;
+	background-color: #66666688;
+	border-radius: 10px;
+}
+
+.thumbnail-title {
+	font-size: smaller;
+}

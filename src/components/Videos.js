@@ -1,11 +1,10 @@
 import React, { useState } from "react";
-import { Container, Box, Typography, Grid } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import "./Thumbnail";
 import Thumbnail from "./Thumbnail";
 
 export default function Videos(props) {
-  const [videosObject, setVideosObject] = useState(props.bfo);
-  console.log(videosObject)
+  const [videosObject] = useState(props.bfo);
 
   return (
     <Container>

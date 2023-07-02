@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import UserSettings from "./UserSettings";
 import { Button, Container } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { getDomain } from "../utils";
+
 export default function Profile() {
   const empty = {};
   const [settings, setSettings] = useState(empty);
+  const navigate = useNavigate();
 
   const setProfile = async () => {
-    await fetch("http://localhost:3000/get_profile", {
+    await fetch(`${getDomain()}:3000/get_profile`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -18,6 +22,8 @@ export default function Profile() {
     })
     .then((data) => {
       setSettings(data);
+    }).catch(() => {
+      navigate("/verify");
     });
   }
 
@@ -26,13 +32,15 @@ export default function Profile() {
   }
 
   const deleteData = async () => {
-    await fetch("http://localhost:3000/delete_data", {
+    await fetch(`${getDomain()}:3000/delete_data`, {
       method: "POST",
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
-    });
+    }).catch(() => {
+      navigate("/verify");
+    })
   }
 
   return (

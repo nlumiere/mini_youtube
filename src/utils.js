@@ -10,4 +10,8 @@ function checkboxTruthyMapping(boolean) {
     return checkboxTruthMapping[boolean];
 }
 
-export { checkboxTruthyMapping };
+function getDomain() {
+    return "http://localhost";
+}
+
+export { checkboxTruthyMapping, getDomain };

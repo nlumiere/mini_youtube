@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Button, Box, Container } from "@mui/material";
 import Profile from "./Profile";
 import Videos from "./Videos";
+import { useNavigate } from "react-router-dom";
+import { getDomain } from "../utils";
 
 const YouTubeData = () => {
   const [youtubeData, setYoutubeData] = useState(null);
+  const navigate = useNavigate();
 
   const retrieveData = async () => {
-    await fetch("http://localhost:3000/retrieveVideos", {
+    await fetch(`${getDomain()}:3000/retrieveVideos`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -16,13 +19,14 @@ const YouTubeData = () => {
     }).then((res) => {
       return res.json();
     }).then((data) => {
-      console.log(data);
       setYoutubeData(data);
+    }).catch(() => {
+      navigate("/verify");
     });
   }
 
   const getVideos = async () => {
-    await fetch("http://localhost:3000/firstpass", {
+    await fetch(`${getDomain()}:3000/firstpass`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -35,7 +39,9 @@ const YouTubeData = () => {
       } else if (res.status === 200) {
         alert("Update filters before retrieving videos.");
       }
-    })
+    }).catch(() => {
+      navigate("/verify");
+    });
   };
 
   useEffect(() => {
@@ -43,7 +49,7 @@ const YouTubeData = () => {
   }, [])
 
   const debug = async () => {
-    const resp = await fetch("http://localhost:3000/debug", {
+    await fetch(`${getDomain()}:3000/debug`, {
       method: "POST",
       credentials: "include",
       headers: {
@@ -58,8 +64,7 @@ const YouTubeData = () => {
         <Container>
           <Box>
             <Profile />
-            <Button onClick={getVideos}>LET'S GO</Button>
-            <Button onClick={debug}>DEBUG</Button>
+            <Button sx={{fontSize:"20px"}} onClick={getVideos}>LET'S GO</Button>
           </Box>
         </Container>
       ) : <Box sx={{marginTop: "100px"}}><Videos bfo={youtubeData} search={false} /></Box>}
